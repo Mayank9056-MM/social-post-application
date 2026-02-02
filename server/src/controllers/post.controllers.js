@@ -5,6 +5,7 @@ import {
 import { ApiError } from '../utils/ApiError.js';
 import Post from '../models/post.models.js';
 import mongoose from 'mongoose';
+import { ApiResponse } from '../utils/ApiResponse.js';
 
 export const createPost = asyncHandler(async (req, res) => {
     let imageUrl = null;
@@ -261,7 +262,7 @@ export const addComment = asyncHandler(async (req, res) => {
         .json(new ApiResponse(201, post, 'Comment added successfully'));
 });
 
-export const addLike = asyncHandler(async (req, res) => {
+export const toggleLike = asyncHandler(async (req, res) => {
     // Implementation for adding a like to a post
     const { postId } = req.params;
 
@@ -276,12 +277,19 @@ export const addLike = asyncHandler(async (req, res) => {
     }
 
     if (post.likes.includes(req.user._id)) {
-        throw new ApiError(400, 'You have already liked this post');
+        // unlike video
+        post.likes.filter((like) => like !== req.user._id);
+
+        await post.save({ validateBeforeSave: false });
+
+        return res
+            .status(201)
+            .json(new ApiResponse(201, post, 'Like removed successfully'));
     }
 
     post.likes.push(req.user._id);
 
-    post.save({ validateBeforeSave: false });
+    await post.save({ validateBeforeSave: false });
 
     return res
         .status(201)
