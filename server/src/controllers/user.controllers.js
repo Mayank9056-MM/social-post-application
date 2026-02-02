@@ -1,8 +1,7 @@
 import User from '../models/user.models.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
-import { asyncHandler } from '../middlewares/asyncHandler.js';
-import mongoose from 'mongoose';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 // helper functions
 const generateToken = async (userId) => {
