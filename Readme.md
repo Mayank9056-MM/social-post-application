@@ -80,6 +80,12 @@ CLOUDINARY_API_SECRET =
 
 ```
 
+For client
+
+```env
+  VITE_API_URL= 
+```
+
 
 
 ### 🧑‍💻 Installation & Setup
