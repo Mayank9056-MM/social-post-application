@@ -2,6 +2,7 @@ import User from '../models/user.models.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import logger from '../logger.js';
 
 // helper functions
 const generateToken = async (userId) => {
@@ -42,7 +43,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         email,
         password,
-        username: username.toLowerCase(),
+        username: username,
     });
 
     const createdUser = await User.findById(user._id).select('-password');
@@ -59,6 +60,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
+    console.log(req.body);
+
     const { username, email, password } = req.body;
 
     if (!username && !email) {
@@ -79,16 +82,27 @@ export const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(401, 'Invalid user credentials');
     }
 
-    const accessToken = await generateToken(user._id);
+    const { accessToken } = await generateToken(user._id);
 
     const loggedInUser = await User.findById(user._id).select('-password');
+
+    if (!loggedInUser) {
+        throw new ApiError(500, 'something went wrong while logging in user');
+    }
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+    };
+
+    res.cookie('accessToken', accessToken, options);
 
     return res.status(200).json(
         new ApiResponse(
             200,
             {
                 user: loggedInUser,
-                token: accessToken,
+                accessToken,
             },
             'User logged in successfully'
         )
