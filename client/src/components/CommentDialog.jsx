@@ -19,6 +19,8 @@ const CommentDialog = ({ open, onClose, post, onAddComment }) => {
   const [submitting, setSubmitting] = useState(false);
   const { user } = useAuth();
 
+  console.log(post.comments,"post")
+
   const comments = post.comments || [];
 
   const handleSubmitComment = async () => {
@@ -159,7 +161,7 @@ const CommentDialog = ({ open, onClose, post, onAddComment }) => {
                 <Box key={commentItem._id} sx={{ display: "flex", gap: 1.5 }}>
                   <Avatar
                     src={commentItem.owner?.avatar}
-                    alt={commentItem.owner?.username}
+                    alt={commentItem?.username}
                     sx={{ width: 36, height: 36 }}
                   />
                   <Box sx={{ flex: 1 }}>
@@ -177,8 +179,8 @@ const CommentDialog = ({ open, onClose, post, onAddComment }) => {
                           mb: 0.5,
                         }}
                       >
-                        {commentItem.owner?.fullName ||
-                          commentItem.owner?.username}
+                        {
+                          commentItem?.username}
                       </Typography>
                       <Typography
                         sx={{
@@ -187,7 +189,7 @@ const CommentDialog = ({ open, onClose, post, onAddComment }) => {
                           wordBreak: "break-word",
                         }}
                       >
-                        {commentItem.content}
+                        {commentItem?.text}
                       </Typography>
                     </Box>
                     <Typography
