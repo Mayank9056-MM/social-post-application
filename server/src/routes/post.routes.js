@@ -17,6 +17,6 @@ router.patch('/update/:postId', verifyAuth, updatePost);
 router.delete('/delete/:postId', verifyAuth, deletePost);
 router.get('/all-posts', verifyAuth, getAllPosts);
 router.post('/add-comment/:postId', verifyAuth, addComment);
-router.post('toggle-like', verifyAuth, toggleLike);
+router.patch('/toggle-like/:postId', verifyAuth, toggleLike);
 
 export default router;
