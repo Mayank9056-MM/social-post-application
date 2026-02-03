@@ -18,6 +18,7 @@ export const createPost = asyncHandler(async (req, res) => {
         const cloudinaryResponse = await uploadOnCloudinary(imageLocalPath, {
             folder: 'posts',
         });
+        
         imageUrl = cloudinaryResponse.secure_url;
 
         if (!imageUrl) {
@@ -159,6 +160,7 @@ export const deletePost = asyncHandler(async (req, res) => {
 });
 
 export const getAllPosts = asyncHandler(async (req, res) => {
+    logger.info('Getting all posts');
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const sort = req.query.sort || 'latest';
@@ -218,7 +220,12 @@ export const getAllPosts = asyncHandler(async (req, res) => {
         },
     ]);
 
+    logger.info('Posts fetched successfully');
+    console.log(posts,"posts")
+
     const totalPosts = await Post.countDocuments();
+
+    logger.info(totalPosts)
 
     return res.status(200).json(
         new ApiResponse(

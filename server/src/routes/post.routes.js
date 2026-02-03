@@ -12,7 +12,7 @@ import { verifyAuth } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/create', upload.single('image'), createPost);
+router.post('/create', verifyAuth, upload.single('image'), createPost);
 router.patch('/update/:postId', verifyAuth, updatePost);
 router.delete('/delete/:postId', verifyAuth, deletePost);
 router.get('/all-posts', verifyAuth, getAllPosts);
